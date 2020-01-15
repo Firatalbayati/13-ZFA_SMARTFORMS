@@ -1,0 +1,33 @@
+REPORT ZFA_SMARTFORMS.
+
+
+DATA: lv_fname TYPE tdsfname.
+lv_fname = 'ZFA_MARA_SMARTFORMS'.
+
+DATA: lv_fmname TYPE rs38l_fnam.
+
+DATA: gt_mara TYPE TABLE OF zfa_mara.
+
+SELECT matnr
+       ersda
+       ernam
+       laeda
+       aenam
+       vpsta FROM zfa_mara
+  INTO CORRESPONDING FIELDS OF TABLE gt_mara. " CORRESPONDING FIELDS OF önemli
+
+
+CALL FUNCTION 'SSF_FUNCTION_MODULE_NAME'
+  EXPORTING
+    formname           = lv_fname
+  IMPORTING
+    fm_name            = lv_fmname
+  EXCEPTIONS
+    no_form            = 1
+    no_function_module = 2
+    OTHERS             = 3.
+
+
+CALL FUNCTION lv_fmname  " '/1BCDWB/SF0...... bu fonksiyonu her zaman çağramk zorundayiz ,kopyalamak olmaz
+  TABLES
+    gt_mara = gt_mara.
